@@ -64,11 +64,12 @@
    /**
     * 单个支付插入订单
     */
-   @Insert("INSERT INTO t_shopping (goods_id,user_id,number,status,created_at,updated_at) " +
-           "VALUES (#{goods_id},#{user_id},#{number},#{status},#{created_at},#{updated_at})")
+   @Insert("INSERT INTO t_shopping (goods_id,user_id,number,user_address,status,created_at,updated_at) " +
+           "VALUES (#{goods_id},#{user_id},#{number},#{user_address},#{status},#{created_at},#{updated_at})")
    int successPayOne(@Param("user_id") int user_id,
                    @Param("goods_id") int goods_id,
                    @Param("number") int number,
+                   @Param("user_address") String user_address,
                    @Param("status") int status,
                    @Param("created_at") String created_at,
                    @Param("updated_at") String updated_at );

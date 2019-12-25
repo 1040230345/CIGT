@@ -105,12 +105,12 @@ public class ShoppingService {
     /**
      * 立即购买事务
      */
-    public R successPayOne(int user_id,int goods_id,int number){
+    public R successPayOne(int user_id,int goods_id,String user_address,int number){
         String created_at = getTime_util.GetNowTime_util();
         String updated_at = getTime_util.GetNowTime_util();
         int status = 1;
         try {
-            shoppingMapper.successPayOne(user_id,goods_id,number,status,created_at,updated_at);
+            shoppingMapper.successPayOne(user_id,goods_id,number,user_address,status,created_at,updated_at);
             return R.ok("支付成功");
         }catch (Exception e){
             System.out.println(e);

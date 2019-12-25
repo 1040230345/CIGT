@@ -72,7 +72,7 @@ public class ShoppingController {
      */
     @PostMapping("/successPayOneInfo")
     @ApiOperation("单个支付接口")
-    public R successPayInfo(int user_id,int goods_id,int number){ return shoppingService.successPayOne(user_id,goods_id,number); }
+    public R successPayInfo(int user_id,int goods_id,int number,String user_address){ return shoppingService.successPayOne(user_id,goods_id,user_address,number); }
 
     /**
      * 多个商品支付接口
