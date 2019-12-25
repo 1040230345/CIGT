@@ -69,7 +69,7 @@
 
                   <tr v-for="(item,index) in goodlist" :key="index">
                     <td><a href="#"><img :src="item.goodsDtos.images" alt="White Blouse Armani"></a></td>
-                    <td><a href="#">{{item.goodsDtos.name}}</a></td>
+                    <td><a href="detail" @click="ToDetail(item.goodsDtos)">{{item.goodsDtos.name}}</a></td>
                     <td>
                       {{item.number}}
                     </td>
@@ -108,7 +108,8 @@
                 <div class="right">
                   <a class="btn btn-outline-secondary" href="javascript:;"  @click="GetUserComment()"
                   ><i class="fa fa-refresh"></i> 更新购物车</a>
-                  <button type="submit" class="btn btn-primary">继续结帐 <i class="fa fa-chevron-right"></i></button>
+                  <span  @click="BuyBasket"
+                          class="btn btn-primary">继续结帐 <i class="fa fa-chevron-right"></i></span>
                 </div>
               </div>
             </form>
@@ -243,6 +244,37 @@
       this.GetUserComment()
     },
     methods:{
+      //购物车结账
+      BuyBasket(){
+        let ids=[]
+        for(let item of this.goodlist){
+          ids.push(item.id)
+        }
+        ids=ids.join(',')
+        console.log(ids)
+        MyAjax('/api/successPayInfo','POST',{id:ids})
+                .then(res=>{
+                  if(res.code==0){
+                    this.$notify({
+                      title: '支付成功',
+                      type: 'success'
+                    });
+                    this.GetUserComment()
+                  }else{
+                    this.$notify.error({
+                      title: '支付失败',
+                    });
+                  }
+                })
+      },
+      //跳转详情页
+      ToDetail(item){
+        let good={
+          type:'搜索结果',
+          data:item
+        }
+        sessionStorage.setItem('good',JSON.stringify(good))
+      },
       //显示修改弹窗
       ShowUpdBasket(item){
         this.centerDialogVisible=true
@@ -315,6 +347,7 @@
                     this.total=this.total+(item.number*item.goodsDtos.price)
                   }
                     this.goodlist=res.data
+                console.log(this.goodlist)
               }else{
                 this.$notify.error({ title: '网络繁忙' });
               }

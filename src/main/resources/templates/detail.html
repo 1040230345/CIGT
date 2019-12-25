@@ -188,7 +188,8 @@
                     <p class="goToDescription"><a href="#details" class="scroll-to">滚动到产品详情、评论</a></p>
                     <p class="price">${{good.data.price}}</p>
                     <p class="text-center buttons">
-                        <a href="javascript:;" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 立即购买</a>
+                        <a href="javascript:;"  @click="centerDialogVisible=true"
+                           class="btn btn-primary"><i class="fa fa-shopping-cart"></i> 立即购买</a>
                       </p>
                   </div>
                   <div data-slider-id="1" class="owl-thumbs">
@@ -199,7 +200,21 @@
                   </div>
                 </div>
               </div>
-			  
+<!--                立即购买弹窗-->
+                <el-dialog :title="'('+good.data.name+')立即购买'" :visible.sync="centerDialogVisible">
+                    <el-form  >
+                        <el-form-item label="数量" required>
+                            <el-input-number v-model="num"  :min="1"  ></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="地址"  required>
+                            <el-input v-model="address"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="centerDialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="NowBuy">确 定</el-button>
+                    </div>
+                </el-dialog>
 			  <!-- 数量详情 -->
               <div id="details" class="box">
                 <p></p>
@@ -219,7 +234,11 @@
 			  <!-- 评论 -->
 			   <div id="details" class="box">
 				   <div id="comments">
-				     <h4> 评 论 {{comment.length}} 条</h4><hr>
+				     <h4 style="display: inline;position: center"> 评 论 {{comment.length}} 条</h4>
+                       <input type="text" placeholder="请输入评论" v-model="mycomment"/>
+                       <a href="javascript:;" style="display: inline;margin-left:10px;"
+                          class="btn btn-primary" @click="SetMycomment">发表评论</a>
+                       <hr>
 				     <div class="row comment" style="margin-top:20px;"
 					 v-for="(item,index) in comment" :key="index">
 						 <!-- 头像 -->
@@ -341,6 +360,11 @@
 		el:'#CIGTdetail',
 		data(){
 			return {
+			    num:1,
+                address:null,
+                centerDialogVisible:false,
+
+			    mycomment:null,     //我发表的评论
 				typelist:null,	//商品分类列表
 				content:'',		//评论内容
 				
@@ -358,6 +382,7 @@
 			}
 		},
 		mounted() {
+
 			//尝试获取session里的商品信息
 			let good=sessionStorage.getItem('good')
 			if(good!=null){
@@ -374,6 +399,61 @@
 			this.GetGoodComment()
 		},
 		methods:{
+		    //立即购买
+            NowBuy(){
+                let userinfo=JSON.parse(sessionStorage.getItem('userinfo'))
+                if(userinfo==null){
+                    this.$notify({title: '未登录，请先登录',type: 'warning'});
+                    return
+                }
+              console.log(this.num)
+                console.log(this.address)
+                console.log(this.good.data.id)
+                console.log(userinfo.id)
+                MyAjax('/api/successPayOneInfo','POST',{
+                    user_id:userinfo.id,
+                    goods_id:this.good.data.id,
+                    number:this.num,
+                    user_address:this.address
+                }).then(res=>{
+                    if(res.code==0){
+                        this.$notify({
+                            title: '购买成功',
+                            type: 'success'
+                        });
+                    }else {
+                        this.$notify.error({
+                            title: '购买失败',
+                        });
+                    }
+                    this.centerDialogVisible=false
+                })
+            },
+		    //发表我的评论
+            SetMycomment(){
+                let userinfo=JSON.parse(sessionStorage.getItem('userinfo'))
+                if(userinfo==null){
+                    this.$notify({title: '未登录，请先登录',type: 'warning'});
+                    return
+                }
+                MyAjax('/api/sendCommentInfo','POST',{
+                    goods_id:this.good.data.id,
+                    userId:userinfo.id,
+                    content:this.mycomment
+                }).then(res=>{
+                    if(res.code==0){
+                        this.$notify({
+                            title: '发表成功',
+                            type: 'success'
+                        });
+                        this.GetGoodComment()
+                    }else{
+                        this.$notify.error({
+                            title: '发表失败',
+                        });
+                    }
+                })
+            },
 			//提交评论
 			SetGoodComment(item){
 				console.log(item)
