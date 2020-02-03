@@ -114,7 +114,9 @@
                   <div class="col-md-12 col-lg-4 products-showing">每页展示产品中的<strong>8</strong>种</div>
                   <div class="col-md-12 col-lg-7 products-number-sort">
                     <form class="form-inline d-block d-lg-flex justify-content-between flex-column flex-md-row">
-                      <div class="products-number"><strong>展示</strong><a href="#" class="btn btn-outline-secondary btn-sm">6</a><a href="#" class="btn btn-sm btn-primary">8</a><a href="#" class="btn btn-outline-secondary btn-sm">全部</a><span>产品</span></div>
+                      <div class="products-number"><strong>展示</strong>
+<!--                        <a href="#" class="btn btn-outline-secondary btn-sm">6</a>-->
+                        <a href="#" class="btn btn-sm btn-primary">8</a><a href="#" class="btn btn-outline-secondary btn-sm">全部</a><span>产品</span></div>
                       <div class="products-sort-by mt-2 mt-lg-0"><strong>排序</strong>
                         <select name="sort-by" class="form-control">
                           <option>价格升序</option>
@@ -152,7 +154,7 @@
 				<!-- /////////////////////////////////// -->
                 <!-- /.products-->
               </div>
-              <div class="pages">
+              <div class="pages" style="margin-bottom:12px;">
 				  <el-pagination
 				    background
 					@current-change="ChangePage"
@@ -234,7 +236,11 @@
 				})
 			},
 			methods:{
-			  ShowAddBasket(item){
+              //降序或升序
+              Sort(){
+
+              },
+              ShowAddBasket(item){
 			    this.centerDialogVisible=true
                 this.addbasket=item
               },
@@ -276,7 +282,8 @@
 						if(res.code==0){
 							this.total=Math.ceil(res.goodsNum/8)*10
 							 this.type=item
-							 this.goodlist=res.goods
+							 this.goodlist=res.goods;
+							console.log(this.goodlist);
 						}else{
 							this.$message({message: '网络开小差',type: 'warning'}); 
 						}

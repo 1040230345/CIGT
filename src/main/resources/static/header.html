@@ -7,9 +7,41 @@
 <!--    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
 </head>
 <body>
-<div id="CIGTheader">
+
+
+<div id="CIGTheader" >
+
+
+    <div id="login-modal"
+         tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #4fbfa8;color:white;">
+                    <h5 class="modal-title"> 用 户 登 录 </h5>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input id="email-modal" type="text" v-model="login.name"
+                               placeholder="账号" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input id="password-modal" type="password" v-model="login.password"
+                               placeholder="密码" class="form-control">
+                    </div>
+                    <p class="text-center">
+                        <button class="btn btn-primary" @click="Login"
+                        ><i class="fa fa-sign-in"></i> 登 录</button>
+                    </p>
+                    <p class="text-center text-muted">没有账号?</p>
+                    <p class="text-center text-muted"><a href="register.html"><strong>马上注册</strong></a>! 一分钟内即可完成注册!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- navbar-->
-    <header class="header mb-5">
+    <header class="header mb-5" style="position: fixed;top:0px;z-index: 99;width:100%;">
         <!--
         *** TOPBAR ***
         _________________________________________________________
@@ -37,33 +69,7 @@
                     </div>
                 </div>
             </div>
-            <div id="login-modal"
-                 tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" class="modal fade">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"> 用 户 登 录 </h5>
-                            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <input id="email-modal" type="text" v-model="login.name"
-                                       placeholder="账号" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <input id="password-modal" type="password" v-model="login.password"
-                                       placeholder="密码" class="form-control">
-                            </div>
-                            <p class="text-center">
-                                <button class="btn btn-primary" @click="Login"
-                                ><i class="fa fa-sign-in"></i> 登 录</button>
-                            </p>
-                            <p class="text-center text-muted">没有账号?</p>
-                            <p class="text-center text-muted"><a href="register.html"><strong>马上注册</strong></a>! 一分钟内即可完成注册!</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <!-- *** TOP BAR END ***-->
 
 
@@ -120,6 +126,9 @@
         </div>
     </header>
 </div>
+<div style="height:150px;">
+
+</div>
 </body>
 
 <!-- 先引入 -->
@@ -171,10 +180,12 @@
                     //password:that.login_password
                     password:hex_md5(this.login.password)
                 }).then(res=>{
+                    console.log(res);
                     if(res.login=='true'){
                         this.loginstatus=true
                         sessionStorage.setItem('userinfo',JSON.stringify(res.User))
-                        this.$notify({title: '登录成功',type: 'success'})
+                        this.$notify({title: '登录成功',type: 'success'});
+                        document.getElementById('login-modal').className = 'modal fade';
                     }else{
                         this.$notify.error({title: '账号或密码错误'})
                     }

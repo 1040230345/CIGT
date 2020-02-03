@@ -36,7 +36,8 @@
 		 <script>
 				  document.write(header.import.body.innerHTML);
 		 </script>
-   
+
+         <div id="CIGTindex">
 	<!-- 轮播图 -->
     <div id="all">
       <div id="content">
@@ -103,151 +104,35 @@
           </div>
           <div class="container">
             <div class="product-slider owl-carousel owl-theme">
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product1_2.jpg" alt="" class="img-fluid"></a></div>
+
+
+              <div class="owl-stage-outer">
+                <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1776px;">
+
+                  <div v-for="(item,index) in goodlist" :key="index" class="owl-item active" style="width: 222px;" >
+                    <div class="item" @click="ToDetail(item)">
+                      <div class="product">
+                        <div class="flip-container">
+                          <div class="flipper">
+                            <div class="front">
+                              <a href="#"><img :src="item.images" alt="" class="img-fluid"></a>
+                            </div>
+                            <div class="back">
+                              <a href="#"><img :src="item.images" alt="" class="img-fluid"></a>
+                            </div>
+                          </div>
+                        </div>
+                        <a href="#" class="invisible"><img :src="item.images" alt="" class="img-fluid"></a>
+                        <div class="text"><h3><a href="#">{{item.name}}</a></h3>
+                          <p class="price"><del></del>${{item.price}}</p>
+                        </div>
+                      </div>
                     </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">破 旧 不 堪 的 黄 色 外 套</a></h3>
-                    <p class="price"> 
-                      <del></del>$143.00
-                    </p>
                   </div>
-                  <!-- /.ribbon-->
+
                 </div>
-                <!-- /.product-->
               </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product2_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">生 锈 的 白 色 带 花 短 袖</a></h3>
-                    <p class="price"> 
-                      $143.00
-                    </p>
-                  </div>
-                  <!-- /.ribbon-->
-                </div>
-                <!-- /.product-->
-              </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product3_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">变 异 成 人 的 黑 兔 子</a></h3>
-                    <p class="price"> 
-                      <del></del>$143.00
-                    </p>
-                  </div>
-                  <!-- /.text-->
-                </div>
-                <!-- /.product-->
-              </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product3_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">变 异 成 人 的 黑 兔 子</a></h3>
-                    <p class="price"> 
-                      <del></del>$143.00
-                    </p>
-                  </div>
-                  <!-- /.text-->
-                </div>
-                <!-- /.product-->
-              </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product2_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">生 锈 的 白 色 带 花 短 袖</a></h3>
-                    <p class="price"> 
-                      <del></del>$143.00
-                    </p>
-                  </div>
-                  <!-- /.ribbon-->
-                </div>
-                <!-- /.product-->
-              </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product1_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">破 旧 不 堪 的 黄 色 外 套</a></h3>
-                    <p class="price"> 
-                      <del></del>$143.00
-                    </p>
-                  </div>
-                  <!-- /.text-->
-                  <!-- /.ribbon-->
-                </div>
-                <!-- /.product-->
-              </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product2_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">生 锈 的 白 色 带 花 短 袖</a></h3>
-                    <p class="price"> 
-                      <del>$280</del>$143.00
-                    </p>
-                  </div>
-                  <!-- /.ribbon-->
-                </div>
-                <!-- /.product-->
-              </div>
-              <div class="item">
-                <div class="product">
-                  <div class="flip-container">
-                    <div class="flipper">
-                      <div class="front"><a href="#"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a></div>
-                      <div class="back"><a href="#"><img src="/static/img/product3_2.jpg" alt="" class="img-fluid"></a></div>
-                    </div>
-                  </div><a href="#" class="invisible"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a>
-                  <div class="text">
-                    <h3><a href="#">变 异 成 人 的 黑 兔 子</a></h3>
-                    <p class="price"> 
-                      <del></del>$143.00
-                    </p>
-                  </div>
-                  <!-- /.text-->
-                </div>
-                <!-- /.product-->
-              </div>
+
               <!-- /.product-slider-->
             </div>
             <!-- /.container-->
@@ -281,7 +166,7 @@
           <div class="container">
             <div class="col-md-12">
               <h3 class="text-uppercase">成为商家</h3>
-              <p class="lead mb-0">想出售自己的物品? <a href="blog.html">上传商品!</a></p>
+              <p class="lead mb-0">想出售自己的物品? <a href="javascript:;" @click="SetGood">上传商品!</a></p>
             </div>
           </div>
         </div>
@@ -314,6 +199,7 @@
         <!-- *** BLOG HOMEPAGE END ***-->
       </div>
     </div>
+         </div>
     <!--
     *** FOOTER ***
     _________________________________________________________
@@ -330,5 +216,48 @@
     <script src="/static/vendor/owl.carousel2.thumbs/owl.carousel2.thumbs.js"></script>
     <script src="/static/js/front.js"></script>
   </body>
-  
+  <script>
+    let userinfo=sessionStorage.getItem('userinfo');
+    userinfo=JSON.parse(userinfo);
+      var CIGTindex = new Vue({
+        el: '#CIGTindex',
+        data: {
+          goodlist: null
+        },
+        mounted(){
+          this.GetNewGoods(1,1)
+        },
+        methods: {
+            //获取推荐商品
+            GetNewGoods(id,pageNum){
+                   MyAjax('/api/getLoadmMoreGoodsInfo/'+id,'POST',{pageNum:pageNum})
+                      .then(res=>{
+                        if(res.code==0){
+                          this.goodlist=res.goods;
+                          console.log(this.goodlist);
+                        }else{
+                          this.$message({message: '网络开小差',type: 'warning'});
+                        }
+                      })
+            },
+          //跳转详情页
+          ToDetail(item){
+            let good={
+              type:'首页推荐',
+              data:item
+            }
+            sessionStorage.setItem('good',JSON.stringify(good))
+            window.location.href='detail'
+          },
+          //上传商品链接
+          SetGood() {
+            if(userinfo==undefined||userinfo==null){
+              this.$notify({title: '未登录，请先登录',type: 'warning'});
+            }else {
+              window.location.href='usergood';
+            }
+          }
+        }
+      })
+  </script>
 </html>
