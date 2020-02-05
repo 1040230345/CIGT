@@ -4,10 +4,14 @@ import com.cigt.base.R;
 import com.cigt.dto.GoodsDto;
 import com.cigt.dto.ShoppingDto;
 import com.cigt.dto.UserDto;
+import com.cigt.mapper.GoodsMapper;
 import com.cigt.mapper.ShoppingMapper;
 import com.cigt.my_util.GetTime_util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,8 +23,11 @@ public class ShoppingService {
     @Autowired
     private GetTime_util getTime_util;
 
+    @Autowired
+    private GoodsMapper goodsMapper;
+
     /**
-     * 查询购物车信息事务
+     * 查询购物车信息
      * @param user_id
      * @return
      */
@@ -43,14 +50,16 @@ public class ShoppingService {
         ShoppingDto shoppingDto = new ShoppingDto();
         shoppingDto.setCreated_at(getTime_util.GetNowTime_util());
         shoppingDto.setUpdated_at(getTime_util.GetNowTime_util());
-      //  UserDto userDto = (UserDto)httpServletRequest.getSession().getAttribute("USER");
-      //  shoppingDto.setUser_id(userDto.getId());
-        //UserDto userDto = (UserDto)httpServletRequest.getSession().getAttribute("USER");
         shoppingDto.setUser_id(userId);
         shoppingDto.setGoods_id(goods_id);
         shoppingDto.setNumber(number);
         shoppingDto.setUser_address(user_address);
         try {
+            //先判断是否加入的数量大于存在的数量
+            int goodsNum = goodsMapper.findGoodsNum(goods_id);
+            if(number>goodsNum){
+                return R.error("超过商品数量数量");
+            }
             shoppingMapper.insertShopping(shoppingDto);
             return R.ok("加入购物车成功");
         }catch (Exception e){
@@ -105,14 +114,26 @@ public class ShoppingService {
     /**
      * 立即购买事务
      */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public R successPayOne(int user_id,int goods_id,String user_address,int number){
         String created_at = getTime_util.GetNowTime_util();
         String updated_at = getTime_util.GetNowTime_util();
         int status = 1;
         try {
+            //判断是否下单的数量大于（商品表锁行）
+            int goodsNum = goodsMapper.findGoodsNum(goods_id);
+            if(number>goodsNum){
+                return R.error("购买的数量超过商品的数量");
+            }
+            //将商品减去相应的数量
+            。。。
+            //加入订单表
             shoppingMapper.successPayOne(user_id,goods_id,number,user_address,status,created_at,updated_at);
+
             return R.ok("支付成功");
         }catch (Exception e){
+            //主动回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             System.out.println(e);
             return R.error("支付失败");
         }
@@ -127,7 +148,7 @@ public class ShoppingService {
             for( int i=0 ; i<id.length ; i++){
                 shoppingMapper.successPay(id[i],updated_at);
             }
-            System.out.println(id.toString());
+            //System.out.println(id.toString());
             return R.ok("支付成功");
         }catch (Exception e){
             System.out.println(e);
