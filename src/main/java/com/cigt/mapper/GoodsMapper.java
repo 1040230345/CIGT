@@ -63,4 +63,11 @@ public interface GoodsMapper {
      */
     @Select("select num from t_goods where id = #{goodsId} for update  ")
     int findGoodsNum(@Param("goodsId") int goodsId);
+
+    /**
+     * 商品库存减少
+     */
+    @Update("update t_goods set num = num - #{goodsNum} where id = #{goodsId} ")
+    int updateGoodsNum(@Param("goodsNum") int goodsNum,
+                       @Param("goodsId") int goodsId);
 }

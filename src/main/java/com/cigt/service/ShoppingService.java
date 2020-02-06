@@ -126,15 +126,14 @@ public class ShoppingService {
                 return R.error("购买的数量超过商品的数量");
             }
             //将商品减去相应的数量
-            。。。
+            goodsMapper.updateGoodsNum(number,goods_id);
             //加入订单表
             shoppingMapper.successPayOne(user_id,goods_id,number,user_address,status,created_at,updated_at);
-
             return R.ok("支付成功");
         }catch (Exception e){
             //主动回滚
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            System.out.println(e);
+            //System.out.println(e);
             return R.error("支付失败");
         }
     }
@@ -142,13 +141,19 @@ public class ShoppingService {
     /**
      * 多个支付接口
      */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public R successPay(int[] id){
         String updated_at = getTime_util.GetNowTime_util();
         try {
             for( int i=0 ; i<id.length ; i++){
-                shoppingMapper.successPay(id[i],updated_at);
+                int num = shoppingMapper.successPay(id[i],updated_at);
+                if(num==0){
+                    //主动回滚
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return R.error("存在商品库存不足或已经失效");
+                }
+
             }
-            //System.out.println(id.toString());
             return R.ok("支付成功");
         }catch (Exception e){
             System.out.println(e);
