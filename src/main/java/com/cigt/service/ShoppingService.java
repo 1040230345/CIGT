@@ -127,6 +127,10 @@ public class ShoppingService {
             }
             //将商品减去相应的数量
             goodsMapper.updateGoodsNum(number,goods_id);
+            if(number==goodsNum){
+                //修改商品为下架
+                goodsMapper.updateGoodsStatus(goods_id);
+            }
             //加入订单表
             shoppingMapper.successPayOne(user_id,goods_id,number,user_address,status,created_at,updated_at);
             return R.ok("支付成功");
@@ -146,8 +150,26 @@ public class ShoppingService {
         String updated_at = getTime_util.GetNowTime_util();
         try {
             for( int i=0 ; i<id.length ; i++){
-                //查询商品并且锁住
-
+                //查询商品
+                GoodsDto goodsDto = shoppingMapper.findGoodsByShoppingId(id[i]);
+                //获取购物车信息
+                ShoppingDto shoppingDto = shoppingMapper.findShoppingById(id[i]);
+                //修改库存
+                try {
+                    if(goodsDto.getStatus()==1){
+                        //主动回滚
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return R.error("操作了已经下架的商品");
+                    }
+                    int num = goodsMapper.updateGoodsNum(shoppingDto.getNumber(),goodsDto.getId());
+                    if(num<1){
+                        return R.error("操作了不存在的商品");
+                    }
+                }catch (Exception e){
+                    //主动回滚
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return R.error("你购买的商品库存不足");
+                }
                 int num = shoppingMapper.successPay(id[i],updated_at);
                 if(num==0){
                     //主动回滚

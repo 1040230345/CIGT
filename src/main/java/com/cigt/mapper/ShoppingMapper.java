@@ -81,4 +81,9 @@
           "(SELECT goods_id from t_shopping where id = #{shoppingId} ) " +
           "for update ")
   GoodsDto findGoodsByShoppingId(@Param("shoppingId") int shoppingId);
+  /**
+   * 获取购物车信息
+   */
+  @Select("select * from t_shopping where id = #{id} ")
+  ShoppingDto findShoppingById(@Param("id") int id );
  }
