@@ -176,11 +176,15 @@ public class ShoppingService {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return R.error("存在商品库存不足或已经失效");
                 }
+                //商品库存检查
+                goodsMapper.updateGoodsStatusByNum(goodsDto.getId());
 
             }
             return R.ok("支付成功");
         }catch (Exception e){
             System.out.println(e);
+            //主动回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return R.error("支付失败");
         }
     }

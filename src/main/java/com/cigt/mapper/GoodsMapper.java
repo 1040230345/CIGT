@@ -59,6 +59,12 @@ public interface GoodsMapper {
     int updateGoodsStatus(@Param("id") int goodsId );
 
     /**
+     * 修改库存为0的时候下架商品
+     */
+    @Update("update t_goods set `status` = (case `num` when 0 then 1 else 0 end ) where id = #{goodsId} ")
+    int updateGoodsStatusByNum(@Param("goodsId") int goodsId);
+
+    /**
      * 获取商品的数量
      */
     @Select("select num from t_goods where id = #{goodsId} for update  ")
