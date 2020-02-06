@@ -146,6 +146,8 @@ public class ShoppingService {
         String updated_at = getTime_util.GetNowTime_util();
         try {
             for( int i=0 ; i<id.length ; i++){
+                //查询商品并且锁住
+
                 int num = shoppingMapper.successPay(id[i],updated_at);
                 if(num==0){
                     //主动回滚

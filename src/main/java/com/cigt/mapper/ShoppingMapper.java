@@ -73,4 +73,12 @@
                    @Param("status") int status,
                    @Param("created_at") String created_at,
                    @Param("updated_at") String updated_at );
+
+  /**
+   * 依靠购物车获取商品全部信息
+   */
+  @Select("select * from t_goods where id = " +
+          "(SELECT goods_id from t_shopping where id = #{shoppingId} ) " +
+          "for update ")
+  GoodsDto findGoodsByShoppingId(@Param("shoppingId") int shoppingId);
  }

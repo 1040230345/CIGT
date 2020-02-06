@@ -12,7 +12,7 @@
     </resultMap>
 
     <select id="getLoadmMoreGoods" resultMap="data,count">
-        SELECT sql_calc_found_rows  * FROM t_goods where status = 0 and category = #{category} LIMIT #{pageNum},8 ;
+        SELECT sql_calc_found_rows  * FROM t_goods where status = 0 and category = #{category} ORDER BY price LIMIT #{pageNum},8 ;
         SELECT FOUND_ROWS() as total ;
     </select>
 
