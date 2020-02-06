@@ -86,4 +86,15 @@
    */
   @Select("select * from t_shopping where id = #{id} ")
   ShoppingDto findShoppingById(@Param("id") int id );
+  /**
+   * 判断是否有未支付的同类商品
+   */
+  @Select("select * from t_shopping where goods_id = #{goodsId} and status = 0 ")
+  ShoppingDto findShoppingByStatus(@Param("goodsId") int goodsId);
+  /**
+   * 更改购物车购买数量
+   */
+  @Update("update t_shopping set number  = number + #{num} where id =#{id} ")
+  int updateShoppingNum(@Param("num") int num,
+                        @Param("id") int id);
  }

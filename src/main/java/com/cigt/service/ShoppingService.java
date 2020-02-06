@@ -57,6 +57,16 @@ public class ShoppingService {
         try {
             //先判断是否加入的数量大于存在的数量
             int goodsNum = goodsMapper.findGoodsNum(goods_id);
+            //判断是否有未结账的同类商品
+            ShoppingDto shoppingDto1 = shoppingMapper.findShoppingByStatus(goods_id);
+            if(shoppingDto1!=null){
+                if(shoppingDto1.getNumber()+number>goodsNum){
+                    return R.error("超过商品数量数量");
+                }
+                //更新数量
+                shoppingMapper.updateShoppingNum(number,shoppingDto1.getId());
+                return R.ok("加入购物车成功");
+            }
             if(number>goodsNum){
                 return R.error("超过商品数量数量");
             }
