@@ -98,11 +98,23 @@
                                 <tbody>
                                 <tr v-for="(item,index) of orderlist" :key="index">
                                     <th>#{{item.id}}</th>
-                                    <td><a href="detail"  @click="ToDetail(item.goodsDtos)">{{item.goodsDtos.name}}</a></td>
+                                    <td>
+                                        <el-tooltip class="item" effect="light" :content="item.goodsDtos.name" placement="right">
+                                            <div style="width:172px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap">
+                                                <a href="detail"  @click="ToDetail(item.goodsDtos)">{{item.goodsDtos.name}}</a>
+                                            </div>
+                                        </el-tooltip>
+                                    </td>
                                     <td>${{item.goodsDtos.price}}</td>
                                     <td>{{item.number}}</td>
                                     <td>${{item.goodsDtos.price*item.number}}</td>
-                                    <td>{{item.user_address}}</td>
+                                    <td>
+                                        <el-tooltip class="item" effect="light" :content="item.user_address" placement="right">
+                                        <div style="width:112px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap">
+                                            {{item.user_address}}
+                                        </div>
+                                        </el-tooltip>
+                                    </td>
                                     <td><span class="badge badge-info">{{item.created_at}}</span></td>
                                     <td><a href="javascript:;" class="btn btn-primary btn-sm">
                                         {{item.status==1?'已支付':'O'}}

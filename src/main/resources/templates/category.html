@@ -102,7 +102,12 @@
                   </ul>
                 </div>
               </div>
-              <div class="banner"><a href="#"><img src="/static/img/banner.jpg" alt="sales 2014" class="img-fluid"></a></div>
+              <div class="banner" style="box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin-bottom: 20px">
+                <a href="#"><img src="/static/img/banner.jpg" alt="sales 2014" class="img-fluid"></a>
+              </div>
+              <div class="banner" style="box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin-bottom: 20px">
+                <a href="#"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580988620196&di=ea1b621832ac8dfc4d4c38c4af96ee65&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Fae19660d31710b150109251e3f1d3ed34fb7bf1f3f2ec-66jOBv_fw658" alt="sales 2014" class="img-fluid"></a>
+              </div>
             </div>
             <div class="col-lg-9">
               <div class="box">
@@ -116,11 +121,13 @@
                     <form class="form-inline d-block d-lg-flex justify-content-between flex-column flex-md-row">
                       <div class="products-number"><strong>展示</strong>
 <!--                        <a href="#" class="btn btn-outline-secondary btn-sm">6</a>-->
-                        <a href="#" class="btn btn-sm btn-primary">8</a><a href="#" class="btn btn-outline-secondary btn-sm">全部</a><span>产品</span></div>
+                        <a href="#" class="btn btn-sm btn-primary">8</a>
+<!--                        <a href="#" class="btn btn-outline-secondary btn-sm"></a>-->
+                        <span>产品</span></div>
                       <div class="products-sort-by mt-2 mt-lg-0"><strong>排序</strong>
-                        <select name="sort-by" class="form-control">
-                          <option>价格升序</option>
-                          <option>价格降序</option>
+                        <select name="sort-by" class="form-control" v-model="sortV">
+                          <option value="0">价格升序</option>
+                          <option value="1">价格降序</option>
                         </select>
                       </div>
                     </form>
@@ -174,7 +181,7 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                   <el-button @click="centerDialogVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="AddBasket">确 定</el-button>
+                  <el-button type="primary" style="background: #4fbfa8" @click="AddBasket">确 定</el-button>
                 </div>
               </el-dialog>
             </div>
@@ -202,6 +209,7 @@
   </body>
   
   <script type="text/javascript">
+    let userinfo=JSON.parse(sessionStorage.getItem('userinfo'))
 		var CIGTcategory=new Vue({
 			el:'#CIGTcategory',
 			data:{
@@ -209,12 +217,15 @@
               addbasket:{},       //加入购物车商品参数
               num:1,          //数量
               address:null,     //地址
-
+              sortV:0,  //排序参数
 				total:null,		//控制分页页数
 				type:{},		//分类标题
 				typelist:null,	//商品分类列表
 				goodlist:null,	//商品列表
 			},
+            watch:{
+              sortV:function(){ this.goodlist.reverse();}
+            },
 			mounted() {
 
 				//获取商品分类列表
@@ -236,21 +247,19 @@
 				})
 			},
 			methods:{
-              //降序或升序
-              Sort(){
-
-              },
               ShowAddBasket(item){
+                userinfo = JSON.parse(sessionStorage.getItem('userinfo'));
+                if(userinfo==null){
+                  this.$notify({title: '未登录，请先登录',type: 'warning'});
+                  return
+                }else {
+                  this.address = userinfo.address;
+                }
 			    this.centerDialogVisible=true
                 this.addbasket=item
               },
               //加入购物车
               AddBasket(){
-                let userinfo=JSON.parse(sessionStorage.getItem('userinfo'))
-                if(userinfo==null){
-                  this.$notify({title: '未登录，请先登录',type: 'warning'});
-                  return
-                }
                 if(this.address==null||this.address==''){this.$notify({title: '地址不能为空',type: 'warning'});return}
 			    MyAjax('/api/insertShoppingInfo','POST',{
                   goods_id:this.addbasket.id,
