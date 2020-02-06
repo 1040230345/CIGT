@@ -146,9 +146,9 @@
                     </div><a href="detail" class="invisible"><img :src="item.images"
 					alt="" class="img-fluid"></a>
                     <div class="text">
-                      <h3 @click="ToDetail(item)"><a href="javascript:;">{{item.name}}</a></h3>
+                      <h3><a href="javascript:;">{{item.name}}</a> </h3>
                       <p class="price"> 
-                        ${{item.price}}
+                        ${{item.price}} <span style="font-size:12px">(仅{{item.num}}件)</span>
                       </p>
                       <p class="buttons">
 						  <a href="detail" @click="ToDetail(item)"
@@ -170,7 +170,7 @@
 				  </el-pagination>
               
               </div>
-              <el-dialog :title="'('+addbasket.name+')添加至购物车'" :visible.sync="centerDialogVisible">
+              <el-dialog :title="'添加至购物车-('+addbasket.name+')'" :visible.sync="centerDialogVisible">
                 <el-form  >
                   <el-form-item label="数量" required>
                     <el-input-number v-model="num"  :min="1"  ></el-input-number>
@@ -267,12 +267,17 @@
                   user_address:this.address,
                   userId:userinfo.id
                 }).then(res=>{
+                  console.log(res)
                   if(res.code==0){
                     this.$notify({
                       title: '加入购物车成功',
                       type: 'success'
                     });
                     this.centerDialogVisible=false
+                  }else if(res.code == 500) {
+                    this.$notify.error({
+                      title: '加入失败，超过商品库存',
+                    });
                   }else{
                     this.$notify.error({
                       title: '加入购物车失败',

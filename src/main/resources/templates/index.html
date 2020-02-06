@@ -217,7 +217,7 @@
     <script src="/static/js/front.js"></script>
   </body>
   <script>
-    let userinfo=sessionStorage.getItem('userinfo');
+    var userinfo=sessionStorage.getItem('userinfo');
     userinfo=JSON.parse(userinfo);
       var CIGTindex = new Vue({
         el: '#CIGTindex',
@@ -251,6 +251,8 @@
           },
           //上传商品链接
           SetGood() {
+            userinfo=sessionStorage.getItem('userinfo');
+            userinfo=JSON.parse(userinfo);
             if(userinfo==undefined||userinfo==null){
               this.$notify({title: '未登录，请先登录',type: 'warning'});
             }else {

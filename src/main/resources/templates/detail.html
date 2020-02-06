@@ -351,6 +351,10 @@
                             type: 'success'
                         });
                         this.cartshow=false
+                    }else if(res.code == 500) {
+                        this.$notify.error({
+                            title: '加入失败，超过商品库存',
+                        });
                     }else{
                         this.$notify.error({
                             title: '加入购物车失败',
@@ -380,6 +384,7 @@
                     number:this.num,
                     user_address:this.address
                 }).then(res=>{
+                    console.log(res);
                     if(res.code==0){
                         this.$notify({
                             title: '购买成功',
@@ -388,12 +393,16 @@
                         setTimeout(function(){
                             window.location.href = 'userorder';
                         },1500);
+                        this.centerDialogVisible=false
+                    }else if(res.code == 500) {
+                        this.$notify.error({
+                            title: '购买的数量超过商品的库存',
+                        });
                     }else {
                         this.$notify.error({
                             title: '购买失败',
                         });
                     }
-                    this.centerDialogVisible=false
                 })
             },
 		    //发表我的评论
