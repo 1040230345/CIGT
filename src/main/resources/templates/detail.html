@@ -88,6 +88,7 @@
                   <div class="box" style="height:278px;">
                       <div style="height:85px;display: flex;align-items: center;justify-content: center;">
                           <h1 class="text-center" style="font-size: 1.5rem;">{{good.data.name}}</h1>
+                          <span v-if="good.data.status == 1" style="color:#cccccc"> 已下架</span>
                       </div>
 
                     <p class="goToDescription" style="margin-top:15px"><a href="#details" class="scroll-to">滚动到产品详情、评论</a></p>
@@ -345,6 +346,7 @@
                     user_address:this.address,
                     userId:userinfo.id
                 }).then(res=>{
+                    console.log(res)
                     if(res.code==0){
                         this.$notify({
                             title: '加入购物车成功',

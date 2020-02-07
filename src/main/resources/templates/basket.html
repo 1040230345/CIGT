@@ -69,7 +69,10 @@
 
                   <tr v-for="(item,index) in goodlist" :key="index">
                     <td><a href="#"><img :src="item.goodsDtos.images" alt="White Blouse Armani"></a></td>
-                    <td><a href="detail" @click="ToDetail(item.goodsDtos)">{{item.goodsDtos.name}}</a></td>
+                    <td>
+                      <a href="detail" @click="ToDetail(item.goodsDtos)">{{item.goodsDtos.name}}</a>
+                      <span v-if="item.goodsDtos.status == 1" style="color:#cccccc"> 已下架</span>
+                    </td>
                     <td>
                       {{item.number}}
                     </td>
@@ -198,19 +201,22 @@
               </table>
             </div>
           </div>
-          <div class="box">
-            <div class="box-header">
-              <h4 class="mb-0">优惠代码</h4>
-            </div>
-            <p class="text-muted">如果您有优惠券代码，请在下面的框中输入。</p>
-            <form>
-              <div class="input-group">
-                <input type="text" class="form-control"><span class="input-group-append">
-                      <button type="button" class="btn btn-primary"><i class="fa fa-gift"></i></button></span>
-              </div>
-              <!-- /input-group-->
-            </form>
+          <div class="banner" style="box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin-bottom: 20px">
+            <a href="#"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580988620196&di=ea1b621832ac8dfc4d4c38c4af96ee65&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Fae19660d31710b150109251e3f1d3ed34fb7bf1f3f2ec-66jOBv_fw658" alt="sales 2014" class="img-fluid"></a>
           </div>
+<!--          <div class="box">-->
+<!--            <div class="box-header">-->
+<!--              <h4 class="mb-0">优惠代码</h4>-->
+<!--            </div>-->
+<!--            <p class="text-muted">如果您有优惠券代码，请在下面的框中输入。</p>-->
+<!--            <form>-->
+<!--              <div class="input-group">-->
+<!--                <input type="text" class="form-control"><span class="input-group-append">-->
+<!--                      <button type="button" class="btn btn-primary"><i class="fa fa-gift"></i></button></span>-->
+<!--              </div>-->
+<!--              &lt;!&ndash; /input-group&ndash;&gt;-->
+<!--            </form>-->
+<!--          </div>-->
         </div>
         <!-- /.col-md-3-->
       </div>
@@ -254,12 +260,17 @@
         console.log(ids)
         MyAjax('/api/successPayInfo','POST',{id:ids})
                 .then(res=>{
-                  if(res.code==0){
+                  console.log(res)
+                  if(res.code==0) {
                     this.$notify({
                       title: '支付成功',
                       type: 'success'
                     });
                     this.GetUserComment()
+                  }else if(res.code==500){
+                    this.$notify.error({
+                      title: res.msg,
+                    });
                   }else{
                     this.$notify.error({
                       title: '支付失败',
