@@ -131,4 +131,30 @@ public class UserService {
             return R.error("删除自己的商品失败");
         }
     }
+
+    /**
+     * 修改自己发布的商品
+     */
+    public R updateUserGoods(GoodsDto goodsDto){
+        try {
+            String nowTime = getTime_util.GetNowTime_util();
+            goodsDto.setUpdated_at(nowTime);
+            userMapper.updateUserGoods(goodsDto);
+            return R.ok("更改成功");
+        }catch (Exception e){
+            return R.error("更改失败");
+        }
+    }
+
+    /**
+     * 获取商品信息
+     */
+    public R getGoodsMsg(int goodsId){
+        try{
+            GoodsDto goodsDto = userMapper.findGoodsMsgByGoodsId(goodsId);
+            return R.ok(goodsDto);
+        }catch (Exception e){
+            return R.error();
+        }
+    }
 }

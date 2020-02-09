@@ -1,5 +1,6 @@
 package com.cigt.mapper;
 
+import com.cigt.dto.GoodsDto;
 import com.cigt.dto.UserDto;
 import org.apache.ibatis.annotations.*;
 
@@ -44,7 +45,23 @@ public interface UserMapper {
     /**
      * 修改用户头像
      */
-    @Update("update t_user set image =#{imagePath} where id = #{id}")
+    @Update("update t_user set image = #{imagePath} where id = #{id}")
     int updateUserImage(@Param("imagePath") String imagePath,
                         @Param("id") int user_id);
+
+    /**
+     * 修改个人商品
+     */
+    @Update("update t_goods set name=#{name},depict=#{depict},price=#{price}," +
+            "images=#{images},updated_at=#{updated_at},num=#{num}," +
+            "category=#{category},banner_image1=#{banner_image1}," +
+            "banner_image2=#{banner_image2},banner_image3=#{banner_image3} " +
+            "where id = #{id}")
+    int updateUserGoods(GoodsDto goodsDto);
+
+    /**
+     * 获取商品信息
+     */
+    @Select("select * from t_goods where id = #{goodsId} ")
+    GoodsDto findGoodsMsgByGoodsId(@Param("goodsId") int goodsId);
 }

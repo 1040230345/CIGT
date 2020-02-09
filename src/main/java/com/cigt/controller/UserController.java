@@ -156,19 +156,13 @@ public class UserController {
      */
     @PostMapping("/updateUserImage")
     @ApiOperation("修改用户头像")
-    public R updateUserImage(String imagePath,HttpServletRequest request){
-        //从session中获取用户信息
-        HttpSession sessoin=request.getSession();
-        UserDto userDto = (UserDto) sessoin.getAttribute("USER");
-        return userService.updateUserImage(imagePath,userDto.getId());
+    public R updateUserImage(String imagePath,int userId){
+        return userService.updateUserImage(imagePath,userId);
     }
 
     @PostMapping("/publishedGoods")
     @ApiOperation("发表商品")
     public R publishedGoods(GoodsDto goodsDto,int userId){
-        //从session中获取用户信息
-       // HttpSession sessoin=request.getSession();
-        //UserDto userDto = (UserDto) sessoin.getAttribute("USER");
         goodsDto.setUser_id(userId);
         return userService.publishedGoods(goodsDto);
     }
@@ -176,19 +170,25 @@ public class UserController {
     @PostMapping("/findUserGoods")
     @ApiOperation("查看自己的商品")
     public R findUserGoods(int userId){
-        //从session中获取用户信息
-       // HttpSession sessoin=request.getSession();
-        //UserDto userDto = (UserDto) sessoin.getAttribute("USER");
         return userService.findUserGoods(userId);
     }
 
     @PostMapping("/delUserGoods")
     @ApiOperation("删除自己的商品")
     public R delUserGoods(int goodsId){
-        //从session中获取用户信息
-       // HttpSession sessoin=request.getSession();
-       // UserDto userDto = (UserDto) sessoin.getAttribute("USER");
         return userService.delUserGoods(goodsId);
+    }
+
+    @PostMapping("/updateMyGoods")
+    @ApiOperation("修改自己的商品")
+    public R updateMyGoods(GoodsDto goodsDto){
+        return userService.updateUserGoods(goodsDto);
+    }
+
+    @GetMapping("/getGoodsMsg")
+    @ApiOperation("获取商品详细信息")
+    public R getGoodsMsg(int goodsId){
+        return userService.getGoodsMsg(goodsId);
     }
 
 }
