@@ -288,6 +288,7 @@
                                 title: '发表成功',
                                 type: 'success'
                             });
+                            this.GetMyGoodList()
                         }else{
                             this.$notify.error({
                                 title: '发表失败',
@@ -321,7 +322,7 @@
 
                 }).catch(() => {
                     this.$notify.error({
-                        title: '删除失败',
+                        title: '切换失败',
                     });
                 });
             },

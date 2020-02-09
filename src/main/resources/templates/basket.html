@@ -53,7 +53,7 @@
           <div class="box">
             <form method="post" action="checkout1">
               <h1>购物车</h1>
-              <p class="text-muted">您当前的购物车中有3个商品。</p>
+              <p class="text-muted">您当前的购物车中有{{goodlist.length}}个商品。</p>
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -128,8 +128,8 @@
               <div class="product same-height">
                 <div class="flip-container">
                   <div class="flipper">
-                    <div class="front"><a href="detail.html"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a></div>
-                    <div class="back"><a href="detail.html"><img src="/static/img/product2_2.jpg" alt="" class="img-fluid"></a></div>
+                    <div class="front"><a href="basket"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a></div>
+                    <div class="back"><a href="basket"><img src="/static/img/product2_2.jpg" alt="" class="img-fluid"></a></div>
                   </div>
                 </div><a href="detail.html" class="invisible"><img src="/static/img/product2.jpg" alt="" class="img-fluid"></a>
                 <div class="text">
@@ -143,8 +143,8 @@
               <div class="product same-height">
                 <div class="flip-container">
                   <div class="flipper">
-                    <div class="front"><a href="detail.html"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a></div>
-                    <div class="back"><a href="detail.html"><img src="/static/img/product1_2.jpg" alt="" class="img-fluid"></a></div>
+                    <div class="front"><a href="basket"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a></div>
+                    <div class="back"><a href="basket"><img src="/static/img/product1_2.jpg" alt="" class="img-fluid"></a></div>
                   </div>
                 </div><a href="detail.html" class="invisible"><img src="/static/img/product1.jpg" alt="" class="img-fluid"></a>
                 <div class="text">
@@ -158,8 +158,8 @@
               <div class="product same-height">
                 <div class="flip-container">
                   <div class="flipper">
-                    <div class="front"><a href="detail.html"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a></div>
-                    <div class="back"><a href="detail.html"><img src="/static/img/product3_2.jpg" alt="" class="img-fluid"></a></div>
+                    <div class="front"><a href="basket"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a></div>
+                    <div class="back"><a href="basket"><img src="/static/img/product3_2.jpg" alt="" class="img-fluid"></a></div>
                   </div>
                 </div><a href="detail.html" class="invisible"><img src="/static/img/product3.jpg" alt="" class="img-fluid"></a>
                 <div class="text">
@@ -243,7 +243,7 @@
     data: {
       centerDialogVisible:false,
         total:0,
-        goodlist:null,
+        goodlist:[],
       updbasket:{ }
     },
     created() {
