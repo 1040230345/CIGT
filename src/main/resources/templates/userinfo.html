@@ -133,6 +133,29 @@
                         <form>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <el-form >
+                                        <el-form-item label="头像" >
+                                            <el-upload
+                                                    action="/api/upUserImage"
+                                                    name="fileName"
+                                                    :file-list="imagelist"
+                                                    list-type="picture-card"
+                                                    :on-success="ImageSuccess"
+                                                    :data="{type:1}"
+                                                    limit="1"
+                                                    :on-remove="handleRemove">
+                                                <i class="el-icon-plus"></i>
+                                            </el-upload>
+                                            <div style="color: darkgray;font-size: 12px;margin-left: 40px;margin-top: -13px;">
+                                                提示：更换头像请删除后重新上传，再保存更改.</div>
+                                        </el-form-item>
+                                    </el-form>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="firstname">名字</label>
                                         <input id="firstname"  v-model="userinfo.real_name"
@@ -217,17 +240,35 @@
         el:'#CIGTuserinfo',
         data:{
             userinfo:null,      //用户信息
-            newpassword:null    //新密码
+            newpassword:null,    //新密码
+            imagelist:[],        //用户头像
         },
         created(){
             if(userinfo==undefined||userinfo==null){
                 this.$notify({title: '未登录，请先登录',type: 'warning'});
                 return
             }
-            this.userinfo=JSON.parse(userinfo)
-            console.log(this.userinfo)
+            this.userinfo=JSON.parse(userinfo);
+            this.imagelist.push({
+                name:'image',url: this.userinfo.image
+            })
         },
         methods:{
+            //头像上传成功
+            ImageSuccess(e){
+                if(e.code==0){
+                    this.$message({
+                        message: '头像上传成功',
+                        type: 'success'
+                    });
+                    this.userinfo.image = e.msg;
+                }else{
+                    this.$message.error('头像上传失败');
+                }
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
             //修改密码
             UpdPassWord(){
                 let newpassword=hex_md5(this.newpassword)
@@ -251,18 +292,27 @@
             },
             //修改个人信息
             UpdUserInfo(){
-                console.log(this.userinfo)
                 MyAjax('/api/updateUserInfo','POST',this.userinfo)
                     .then(res=>{
                         if(res.updateUser=='true'){
                             this.$notify({
-                                title: '保存成功',
+                                title: '保存基本信息成功',
                                 type: 'success'
                             });
+                            MyAjax('/api/updateUserImage','POST',{
+                                imagePath: this.userinfo.image,
+                                userId: this.userinfo.id
+                            }).then(res=>{
+                                if(res.code == 0){
+                                    this.$notify({title: '保存头像成功', type: 'success' });
+                                }else{
+                                    this.$notify.error({ title: '保存头像失败'});
+                                }
+                            })
                             sessionStorage.setItem('userinfo',JSON.stringify(this.userinfo))
                         }else{
                             this.$notify.error({
-                                title: '保存失败',
+                                title: '保存基本信息失败',
                             });
                         }
                     })

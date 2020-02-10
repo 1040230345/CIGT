@@ -165,13 +165,23 @@
                                     <td><a href="detail" @click="ToDetail(item)">{{item.name}}</a></td>
                                     <td>{{item.num}}</td>
                                     <td>${{item.price}}</td>
-                                    <td>{{item.category}}</td>
+                                    <td>
+                                        {{item.category == 1? '服装衣物':null}}
+                                        {{item.category == 2? '书籍课本':null}}
+                                        {{item.category == 3? '电子产品':null}}
+                                        {{item.category == 4? '实用家具':null}}
+                                        {{item.category == 5? '出行票卷':null}}
+                                        {{item.category == 6? '爱情读物':null}}
+                                    </td>
                                     <td>{{item.depict}}</td>
                                     <td>{{item.status==0?'上架中':'下架中'}}</td>
                                     <td>
                                         <a href="javascript:;"
                                            @click="ChangeMyGoodStatus(item)">
                                             {{item.status==0?'下架':'上架'}}
+                                        </a>
+                                        <a href="javascript:;" @click="UpdGoodInfo(item)">
+                                            修改
                                         </a>
                                     </td>
                                 </tr>
@@ -191,6 +201,71 @@
 <!--                                  </tr>-->
                                 </tfoot>
                             </table>
+<!--                            修改我的商品弹窗-->
+                            <el-dialog :title="'修改商品信息'" :visible.sync="updshow">
+                                <el-form >
+                                    <el-form-item label="名称" >
+                                        <el-input v-model="updgood.name" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="价格" >
+                                        <el-input v-model="updgood.price" type="number"
+                                                  autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="描述" >
+                                        <el-input v-model="updgood.depict" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="数量" >
+                                        <el-input v-model="updgood.num" type="number"
+                                                  autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="类别" >
+                                        <select v-model="updgood.category">
+                                            <option value ="1">服装衣物</option>
+                                            <option value ="2">书籍课本</option>
+                                            <option value="3">电子产品</option>
+                                            <option value="4">实用家具</option>
+                                            <option value="5">出行票卷</option>
+                                            <option value="6">爱情读物</option>
+                                        </select>
+                                    </el-form-item>
+                                    <el-form-item label="主图" >
+                                        <el-upload
+                                                action="/api/upUserImage"
+                                                name="fileName"
+                                                :file-list="mainImg"
+                                                list-type="picture-card"
+                                                :on-success="ImageSuccess"
+                                                :data="{type:2}"
+                                                limit="1"
+                                                :on-preview="handlePictureCardPreview"
+                                                :on-remove="handleRemove">
+                                            <i class="el-icon-plus"></i>
+                                        </el-upload>
+                                        <el-dialog :visible.sync="dialogVisible">
+                                            <img width="100%" :src="dialogImageUrl" alt="">
+                                        </el-dialog>
+                                    </el-form-item>
+                                    <el-form-item label="轮播图" >
+                                        <el-upload
+                                                action="/api/upUserImage"
+                                                :file-list="contentImg"
+                                                name="fileName"
+                                                list-type="picture-card"
+                                                :on-success="BannerSuccess"
+                                                :data="{type:2}"
+                                                limit="3"
+                                                :on-preview="handlePictureCardPreview"
+                                                :on-remove="contentRemove">
+                                            <i class="el-icon-plus"></i>
+                                        </el-upload>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="updshow = false">取 消</el-button>
+                                    <el-button type="primary" style="background-color: #4fbfa8;color:white"
+                                              @click = "UpdateGoodInfo" >修 改</el-button>
+                                </div>
+                            </el-dialog>
                         </div>
                     </div>
                 </div>
@@ -227,12 +302,54 @@
                 name:null,price:null,depict:null,
                 num:null,category:null,images:null,
             },             //发表商品参数
-            mygoodlist:null         //商品列表
+            mygoodlist:null,     //商品列表
+
+            updshow:false,  //修改我的商品框显示参数
+            updgood:{},   //修改商品信息
+
+            mainImg:[],     //修改主图
+            contentImg:[],  //修改轮播图
         },
         created(){
           this.GetMyGoodList()
         },
         methods:{
+            //确认修改
+            UpdateGoodInfo() {
+                this.updgood.banner_image1 = this.contentImg[0] != undefined ? this.contentImg[0].url : '无';
+                this.updgood.banner_image2 = this.contentImg[1] != undefined ? this.contentImg[1].url : '无';
+                this.updgood.banner_image3 = this.contentImg[2] != undefined ? this.contentImg[2].url : '无';
+                console.log(this.updgood);
+                MyAjax('/api/updateMyGoods','POST',this.updgood)
+                    .then(res=>{
+                        if(res.code==0){
+                            this.$notify({
+                                title: '修改成功',
+                                type: 'success'
+                            });
+                            this.updshow = false;
+                            this.GetMyGoodList()
+                        }else{
+                            this.$notify.error({
+                                title: '修改失败',
+                            });
+                        }
+                    })
+            },
+            //修改商品信息
+            UpdGoodInfo(item){
+               this.updshow = true;
+               this.mainImg.length = 0;
+               this.mainImg.push({
+                    name: item.name,
+                   url: item.images
+               });
+                this.contentImg.length = 0;
+                this.contentImg.push({ name: 'banner_image1',url: item.banner_image1});
+                this.contentImg.push({ name: 'banner_image2',url: item.banner_image2})
+                this.contentImg.push({ name: 'banner_image3',url: item.banner_image3})
+               this.updgood = JSON.parse(JSON.stringify(item));
+            },
             //轮播图
             BannerSuccess(e){
                 if(e.code==0){
@@ -240,7 +357,8 @@
                         message: '上传成功',
                         type: 'success'
                     });
-                    this.banner.push(e.msg)
+                    this.banner.push(e.msg);
+                    this.contentImg.push({ name:'newbanner',url: e.msg});
                 }else{
                     this.$message.error('上传失败');
                 }
@@ -252,9 +370,18 @@
                         message: '上传成功',
                         type: 'success'
                     });
-                    this.setgood.images=e.msg
+                    this.setgood.images=e.msg;
+                    this.updgood.images = e.msg;
                 }else{
                     this.$message.error('上传失败');
+                }
+            },
+            //修改轮播图删除
+            contentRemove(file, fileList) {
+                for (let i=0; i<this.contentImg.length; i++) {
+                    if(this.contentImg[i].uid == file.uid) {
+                        this.contentImg.splice(i,1);
+                    }
                 }
             },
             handleRemove(file, fileList) {
